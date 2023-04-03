@@ -1,6 +1,6 @@
 # Import necessary packages
 import openai
-import json
+import os
 import requests
 import io
 import base64
@@ -9,7 +9,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QFormLayout, QLineEdit, QPushButton
 
 # Initialize the OpenAI API key
-openai.api_key = "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"
+openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Define a function to retrieve the text and store it in the variable
 def get_text():
@@ -82,7 +82,7 @@ if __name__ == "__main__":
     w.resize(1000, 500)
     w.setWindowTitle("Imgage Generation Tool")
 
-    # Set the layout 
+    # Set the layout
     layout = QFormLayout()
 
     # Create label and text field for user input
