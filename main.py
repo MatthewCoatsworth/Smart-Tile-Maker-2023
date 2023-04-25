@@ -13,10 +13,10 @@ openai.api_key = os.environ["OPENAI_API_KEY"]
 
 # Define a function to retrieve the text and store it in the variable
 def get_text():
-    global my_variable
+    global UserInputVar
 
 
-# Define a function to get GPT output
+# Define a function to get GPT outputs
 def askGPT(text):
     response = openai.Completion.create(
         engine = "text-davinci-003",
@@ -26,10 +26,13 @@ def askGPT(text):
     )
     return response.choices[0].text
 
+# Prompt that gets sent to SD
 def sd(input):
 
+    # Link to SD 
     url = "http://127.0.0.1:7860"
 
+    # Settings and vairables for SD
     payload = {
     "prompt": input,
     "seed": -1,
@@ -42,6 +45,7 @@ def sd(input):
     "tiling": True
     }
 
+    # Sets the modes to one trained on 
     option_payload = {
         "sd_model_checkpoint": "TextureDiffusion_10.ckpt [ded387e0f3]"
     }
@@ -61,18 +65,23 @@ def sd(input):
 
         pnginfo = PngImagePlugin.PngInfo()
         pnginfo.add_text("parameters", response2.json().get("info"))
-        image.save('player.png', pnginfo=pnginfo)
+        image.save('C:/Users/matth/Desktop/texture.png', pnginfo=pnginfo)
 
 
 
-# Define a function to generate GPT output and print it
+# Define a function to generate GPT outputs and print it
 def gpt():
-    my_variable = edit1.text()
-    print(my_variable)
-    myQn = f"give 1 words relating to a material found in {my_variable} separated by commas"
-    output = askGPT(myQn)
-    print(output)
-    sd(output)
+    TextureName = ["", "", "", "", ""]
+    UserInputVar = edit1.text()
+    print(UserInputVar)
+    TextureName[0] = askGPT(f"give 1 word relating to a material found in {UserInputVar}")
+    TextureName[1] = askGPT(f"give 1 word relating to a material found in {UserInputVar} that is not {TextureName}")
+    TextureName[2] = askGPT(f"give 1 word relating to a material found in {UserInputVar} that is not {TextureName}")
+    TextureName[3] = askGPT(f"give 1 word relating to a material found in {UserInputVar} that is not {TextureName}")
+    TextureName[4] = askGPT(f"give 1 word relating to a material found in {UserInputVar} that is not {TextureName}")
+
+    print(TextureName)
+    sd(TextureName[0])
 
 # Create the UI for user input
 if __name__ == "__main__":
@@ -90,9 +99,9 @@ if __name__ == "__main__":
     edit1 = QLineEdit()
 
     # Create the variable to store the text
-    my_variable = ''
+    UserInputVar = ''
 
-    # Create a button to generate GPT output
+    # Create a button to generate GPT outputs
     btn1 = QPushButton('Generate')
     btn1.clicked.connect(gpt)
 
